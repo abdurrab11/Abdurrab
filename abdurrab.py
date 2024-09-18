@@ -1,4 +1,4 @@
-we#----------------------------[IMPORT/MODULE]-----------------------------------#
+we#------#----------------------------[IMPORT/MODULE]-----------------------------------#
 import requests,bs4,json,os,sys,uuid,random,datetime,time,re
 import urllib3,rich,base64
 from rich.markdown import Markdown as mark
