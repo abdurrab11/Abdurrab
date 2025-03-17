@@ -35,6 +35,8 @@ logo = f"""
 {A}  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 {Y}  NOTE: This tool is for educational purposes only.
 {Y}  Do not use it for illegal activities.
+{Y}  Misuse of this tool is strictly prohibited.
+{Y}  Always follow ethical guidelines.
 {A}  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
 
@@ -46,7 +48,9 @@ def select_country():
     print(f"{G}[2] {A}Afghanistan")
     print(f"{G}[3] {A}India")
     print(f"{G}[4] {A}Bangladesh")
-    print(f"{G}[5] {A}Exit")
+    print(f"{G}[5] {A}United States")
+    print(f"{G}[6] {A}United Kingdom")
+    print(f"{G}[7] {A}Exit")
     
     choice = input(f"{G}Select Country: {A}")
     
@@ -59,6 +63,10 @@ def select_country():
     elif choice == "4":
         return "BD", "880"
     elif choice == "5":
+        return "USA", "1"
+    elif choice == "6":
+        return "UK", "44"
+    elif choice == "7":
         exit()
     else:
         print(f"{R}Invalid Choice! Try Again...")
