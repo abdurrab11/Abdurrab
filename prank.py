@@ -1,77 +1,83 @@
-#!/bin/bash
+import os
+import time
+import sys
+import random
 
-# Fake Hacking Script for Prank
-# Coded by: ABD UR RAB
-# Just for fun! No real hacking.
+# Colors for Hacker-Style Look
+GREEN = "\033[92m"
+CYAN = "\033[96m"
+RED = "\033[91m"
+RESET = "\033[0m"
 
-clear
+# Fake Loading Animation
+def fake_progress(message):
+    sys.stdout.write(CYAN + message)
+    sys.stdout.flush()
+    for _ in range(5):
+        sys.stdout.write(".")
+        sys.stdout.flush()
+        time.sleep(1)
+    print(" ✅ Done!" + RESET)
 
-echo -e "\e[32m"
-echo " █████╗ ██████╗ ██████╗     ██╗   ██╗██████╗     ██████╗  █████╗ ██████╗ "
-echo "██╔══██╗██╔══██╗██╔══██╗    ██║   ██║╚════██╗    ██╔══██╗██╔══██╗██╔══██╗"
-echo "███████║██████╔╝██████╔╝    ██║   ██║ █████╔╝    ██████╔╝███████║██████╔╝"
-echo "██╔══██║██╔═══╝ ██╔═══╝     ██║   ██║ ╚═══██╗    ██╔═══╝ ██╔══██║██╔═══╝ "
-echo "██║  ██║██║     ██║         ╚██████╔╝██████╔╝    ██║     ██║  ██║██║     "
-echo "╚═╝  ╚═╝╚═╝     ╚═╝          ╚═════╝ ╚═════╝     ╚═╝     ╚═╝  ╚═╝╚═╝     "
-echo -e "\e[0m"
-echo " [👨‍💻] Elite Hacker Panel - ABD UR RAB"
-echo " [🔥] Loading Hack Tools..."
-sleep 3
+# Clear Screen
+os.system("clear")
+
+# Display Hacker-Style Header
+print(GREEN + """
+ █████╗ ██████╗ ██████╗     ██╗   ██╗██████╗     ██████╗  █████╗ ██████╗ 
+██╔══██╗██╔══██╗██╔══██╗    ██║   ██║╚════██╗    ██╔══██╗██╔══██╗██╔══██╗
+███████║██████╔╝██████╔╝    ██║   ██║ █████╔╝    ██████╔╝███████║██████╔╝
+██╔══██║██╔═══╝ ██╔═══╝     ██║   ██║ ╚═══██╗    ██╔═══╝ ██╔══██║██╔═══╝ 
+██║  ██║██║     ██║         ╚██████╔╝██████╔╝    ██║     ██║  ██║██║     
+╚═╝  ╚═╝╚═╝     ╚═╝          ╚═════╝ ╚═════╝     ╚═╝     ╚═╝  ╚═╝╚═╝     
+""" + RESET)
+
+print(CYAN + " [👨‍💻] Elite Hacker Panel - ABD UR RAB")
+print(" [🔥] Loading Hack Tools...\n" + RESET)
+time.sleep(2)
 
 # Fake Menu
-echo -e "\e[36m"
-echo " [1] Facebook Hack"
-echo " [2] Instagram Hack"
-echo " [3] TikTok Hack"
-echo " [4] WhatsApp Hack"
-echo " [5] Number Data Hack"
-echo " [0] Exit"
-echo -e "\e[0m"
+print(CYAN + """
+ [1] Facebook Hack
+ [2] Instagram Hack
+ [3] TikTok Hack
+ [4] WhatsApp Hack
+ [5] Number Data Hack
+ [0] Exit
+""" + RESET)
 
-read -p " Select an option: " option
-
-# Fake Progress Animation
-fake_progress() {
-    echo -ne " [🔄] Initializing"
-    for i in {1..5}; do
-        echo -ne "."
-        sleep 1
-    done
-    echo -e " ✅ Done!\n"
-}
+# Get User Input
+option = input(" Select an option: ")
 
 # Fake Hacking Simulation
-case $option in
-    1)
-        echo " [🔍] Connecting to Facebook Servers..."
-        fake_progress
-        echo -e "\e[31m [❌] ERROR! Facebook Firewall Detected!\e[0m"
-        ;;
-    2)
-        echo " [🔍] Cracking Instagram Password..."
-        fake_progress
-        echo -e "\e[31m [❌] Access Denied! Instagram Security Too Strong!\e[0m"
-        ;;
-    3)
-        echo " [🔍] Exploiting TikTok API..."
-        fake_progress
-        echo -e "\e[31m [❌] Oops! TikTok Detected Suspicious Activity!\e[0m"
-        ;;
-    4)
-        echo " [🔍] Intercepting WhatsApp Messages..."
-        fake_progress
-        echo -e "\e[31m [❌] Encryption Too Strong! Try Again Later!\e[0m"
-        ;;
-    5)
-        echo " [🔍] Fetching Number Data from Dark Web..."
-        fake_progress
-        echo -e "\e[31m [❌] FBI WARNING! Illegal Action Detected!\e[0m"
-        ;;
-    0)
-        echo " [👋] Exiting... Goodbye!"
-        exit
-        ;;
-    *)
-        echo " [⚠️] Invalid Option! Try Again!"
-        ;;
-esac
+if option == "1":
+    print(" [🔍] Connecting to Facebook Servers...")
+    fake_progress(" [🔄] Initializing Facebook Hack")
+    print(RED + " [❌] ERROR! Facebook Firewall Detected!" + RESET)
+
+elif option == "2":
+    print(" [🔍] Cracking Instagram Password...")
+    fake_progress(" [🔄] Processing Instagram Hack")
+    print(RED + " [❌] Access Denied! Instagram Security Too Strong!" + RESET)
+
+elif option == "3":
+    print(" [🔍] Exploiting TikTok API...")
+    fake_progress(" [🔄] Hacking TikTok Database")
+    print(RED + " [❌] Oops! TikTok Detected Suspicious Activity!" + RESET)
+
+elif option == "4":
+    print(" [🔍] Intercepting WhatsApp Messages...")
+    fake_progress(" [🔄] Decrypting WhatsApp Chats")
+    print(RED + " [❌] Encryption Too Strong! Try Again Later!" + RESET)
+
+elif option == "5":
+    print(" [🔍] Fetching Number Data from Dark Web...")
+    fake_progress(" [🔄] Searching Dark Web Records")
+    print(RED + " [❌] FBI WARNING! Illegal Action Detected!" + RESET)
+
+elif option == "0":
+    print(" [👋] Exiting... Goodbye!")
+    sys.exit()
+
+else:
+    print(RED + " [⚠️] Invalid Option! Try Again!" + RESET)
