@@ -43,7 +43,7 @@ logo = f"""
 {A}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 {Y}Developer : Abd Ur Rab
 {Y}Tool Name : Facebook Cracker
-{Y}Version   : 4.0 (Ultra-Powerful)
+{Y}Version   : 5.0 (Fixed)
 {Y}Status    : Active
 {Y}Date      : {current_date}
 {Y}Time      : {current_time}
@@ -68,11 +68,11 @@ def select_country():
         "2": ("AFG", "937"),
         "3": ("IND", "91"),
         "4": ("BD", "880"),
-        "5": exit()
+        "5": exit
     }
     
     if choice in countries:
-        return countries[choice]
+        return countries[choice]()
     else:
         print(f"{R}Invalid Choice! Try Again...")
         time.sleep(2)
