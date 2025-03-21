@@ -126,10 +126,13 @@ def main():
     os.system("clear")
     print(logo)
     
+    # Select country
     country_code, prefix = select_country()
+    print(f"{G}Selected Country: {A}{country_code}")
+    print(f"{G}Prefix: {A}{prefix}")
     
+    # Generate IDs
     limit = int(input(f"{G}Enter Number of IDs to Generate: {A}"))
-    
     user_ids = [prefix + str(random.randint(1000000, 9999999)) for _ in range(limit)]
     passwords = ["123456", "password", "pakistan", "786786", "112233"]
     
