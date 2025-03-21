@@ -43,7 +43,7 @@ logo = f"""
 {A}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 {Y}Developer : Abd Ur Rab
 {Y}Tool Name : Facebook Cracker
-{Y}Version   : 8.0 (Fully Upgraded)
+{Y}Version   : 9.0 (Fully Fixed)
 {Y}Status    : Active
 {Y}Date      : {current_date}
 {Y}Time      : {current_time}
